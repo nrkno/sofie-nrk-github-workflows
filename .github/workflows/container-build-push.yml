@@ -37,12 +37,18 @@ on:
           type=ref,event=branch
           type=ref,event=tag
           type=raw,value=latest,enable={{is_default_branch}}
+    outputs:
+      image_digest:
+        description: "Image digest"
+        value: ${{ jobs.container-image-release.outputs.output_digest }}
 
 jobs:
   container-image-release:
     name: Make container image release
     runs-on: ${{ fromJson(inputs.runners) }}
     timeout-minutes: 15
+    outputs:
+      output_digest: ${{ steps.build_and_push.outputs.digest }}
 
     steps:
       - name: Check out repo
@@ -68,6 +74,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build and push
+        id: build_and_push
         uses: docker/build-push-action@v6
         with:
           context: ${{ inputs.context }}
