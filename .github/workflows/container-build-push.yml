@@ -75,7 +75,7 @@ jobs:
 
       - name: Build and push
         id: build_and_push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: ${{ inputs.context }}
           file: ${{ inputs.file }}
